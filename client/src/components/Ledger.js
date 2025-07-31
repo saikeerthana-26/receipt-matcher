@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaMoneyBillWave, FaCalendarAlt, FaFileAlt, FaEnvelope, FaTrash } from 'react-icons/fa';
 
-const BACKEND_URL='https://receipt-matcher-backend.onrender.com/';
+const BACKEND_URL='https://receipt-matcher-backend.onrender.com';
 
 
 const Ledger = () => {
