@@ -4,7 +4,7 @@ const BankUpload = () => {
   const [file, setFile] = useState(null);
   const [comparisonResult, setComparisonResult] = useState(null);
 
-  const backendUrl = 'https://receipt-matcher-backend.onrender.com/';
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
