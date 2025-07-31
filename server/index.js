@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
+require('./deploy'); // ✅ this will run on Render startup
 
 const bankUploadRoutes = require('./bankUpload');
 const compareRoutes = require('./routes/compare');
