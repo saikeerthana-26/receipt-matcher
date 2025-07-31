@@ -1,28 +1,26 @@
-const bankUploadRoutes = require('./bankUpload');
-const compareRoutes = require('./routes/compare');
-
-
-require('dotenv').config();
-
-console.log('🧪 Script started');
-
 const express = require('express');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
+require('dotenv').config();
 
+const bankUploadRoutes = require('./bankUpload');
+const compareRoutes = require('./routes/compare');
+const ledgerRoutes = require('./routes/ledger');
+const checkEmails = require('./emailReader'); // ✅ Import the email reader
+
+console.log('🧪 Script started');
 console.log('📦 Modules imported');
 
 const app = express();
 const prisma = new PrismaClient();
-const PORT = 5050;
+const PORT = process.env.PORT || 5050;
 
 console.log('🔧 Middleware registering...');
 app.use(cors());
 app.use(express.json());
 app.use(bankUploadRoutes);
-app.use('/',compareRoutes);
-app.use(require('./routes/ledger'));
-
+app.use('/', compareRoutes);
+app.use(ledgerRoutes);
 
 app.get('/', (req, res) => {
   console.log('📥 GET / hit');
@@ -40,10 +38,13 @@ app.get('/ledger', async (req, res) => {
   }
 });
 
+// ✅ Call email reader function at startup
+checkEmails();
+
 try {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
   });
 } catch (err) {
-  console.error('Server failed to start:', err);
+  console.error('❌ Server failed to start:', err);
 }
