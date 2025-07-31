@@ -33,7 +33,7 @@ function checkEmails() {
       const since = new Date();
       since.setDate(since.getDate() - 2);
 
-      imap.search(['UNSEEN', ['SINCE', since.toDateString()]], function (err, results) {
+      imap.search([['SINCE', since.toDateString()]], function (err, results) {
         if (err || !results.length) {
           console.log('📭 No new emails with PDF attachments.');
           imap.end();
