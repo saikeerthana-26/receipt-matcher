@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FaMoneyBillWave, FaCalendarAlt, FaFileAlt, FaEnvelope, FaTrash } from 'react-icons/fa';
 
+const BACKEND_URL='https://receipt-matcher-backend.onrender.com/';
+
+
 const Ledger = () => {
     const [entries, setEntries] = useState([]);
 
     const fetchLedger = () => {
-        fetch('http://localhost:5050/ledger')
+        fetch(`${BACKEND_URL}/ledger`)
             .then(res => res.json())
             .then(data => setEntries(data))
             .catch(err => console.error("Failed to fetch ledger:", err));
@@ -20,7 +23,7 @@ const Ledger = () => {
         if (!confirm) return;
     
         try {
-            await fetch(`http://localhost:5050/ledger/${id}`, { method: 'DELETE' });
+            await fetch(`${BACKEND_URL}/ledger/${id}`, { method: 'DELETE' });
             setEntries(prev => prev.filter(entry => entry.id !== id));
     
             // 🚀 Dispatch custom event to trigger compare refresh

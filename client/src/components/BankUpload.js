@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const BankUpload = () => {
   const [file, setFile] = useState(null);
   const [comparisonResult, setComparisonResult] = useState(null);
+
+  const backendUrl = 'https://receipt-matcher-backend.onrender.com/';
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -12,20 +13,19 @@ const BankUpload = () => {
   useEffect(() => {
     const refreshCompare = async () => {
       try {
-        const compareRes = await fetch('http://localhost:5050/compare');
-        const comparisonData = await compareRes.json();
-        setComparisonResult(comparisonData);
+        const res = await fetch(`${backendUrl}/compare`);
+        const data = await res.json();
+        setComparisonResult(data);
       } catch (err) {
         console.error("Failed to refresh comparison:", err);
       }
     };
 
     window.addEventListener('refreshCompare', refreshCompare);
-
     return () => {
       window.removeEventListener('refreshCompare', refreshCompare);
     };
-  }, []);
+  }, [backendUrl]);
 
   const handleUpload = async () => {
     if (!file) return alert("Please select a CSV file.");
@@ -34,7 +34,7 @@ const BankUpload = () => {
     formData.append("file", file);
 
     try {
-      const res = await fetch('http://localhost:5050/upload-bank', {
+      const res = await fetch(`${backendUrl}/upload-bank`, {
         method: 'POST',
         body: formData,
       });
@@ -45,7 +45,7 @@ const BankUpload = () => {
         return;
       }
 
-      const compareRes = await fetch('http://localhost:5050/compare');
+      const compareRes = await fetch(`${backendUrl}/compare`);
       const comparisonData = await compareRes.json();
       setComparisonResult(comparisonData);
     } catch (err) {
@@ -72,9 +72,7 @@ const BankUpload = () => {
                 <td className="border border-gray-300 p-2">
                   {new Date(entry.date).toLocaleDateString()}
                 </td>
-                <td className="border border-gray-300 p-2">
-                  {entry.description}
-                </td>
+                <td className="border border-gray-300 p-2">{entry.description}</td>
                 <td className="border border-gray-300 p-2">
                   ${Number(entry.amount).toFixed(2)}
                 </td>
@@ -104,9 +102,7 @@ const BankUpload = () => {
                 <td className="border border-gray-300 p-2">
                   {new Date(match.ledger.date).toLocaleDateString()}
                 </td>
-                <td className="border border-gray-300 p-2">
-                  {match.ledger.description}
-                </td>
+                <td className="border border-gray-300 p-2">{match.ledger.description}</td>
                 <td className="border border-gray-300 p-2">
                   ${Number(match.ledger.amount).toFixed(2)}
                 </td>
