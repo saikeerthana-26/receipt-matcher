@@ -1,22 +1,13 @@
-// deploy.js
-const { PrismaClient } = require('@prisma/client');
+// server/deploy.js
 const { exec } = require('child_process');
 
-const prisma = new PrismaClient();
-
-async function main() {
-  console.log("🚀 Applying Prisma migrations...");
-  exec('npx prisma migrate deploy', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`❌ Migration error: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`⚠️ Migration stderr: ${stderr}`);
-      return;
-    }
-    console.log(`✅ Migration Output: ${stdout}`);
-  });
-}
-
-main();
+exec('npx prisma migrate deploy', (err, stdout, stderr) => {
+  if (err) {
+    console.error('❌ Migration error:', err.message);
+    return;
+  }
+  if (stderr) {
+    console.warn('⚠️ Migration warning:', stderr);
+  }
+  console.log('✅ Migration output:', stdout);
+});
